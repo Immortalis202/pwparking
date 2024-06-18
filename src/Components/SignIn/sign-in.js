@@ -7,6 +7,13 @@ const SignIn = () => {
     const [emailValid, setEmailValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
 
+    const login = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const email = form.email.value;
+        const password = form.password.value;
+    }
+
     useEffect(() => {
         validateEmail();
     }, [email]);
@@ -24,22 +31,26 @@ const SignIn = () => {
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
         setPasswordValid(pattern.test(password));
     }    
+    const resetInput = () => {
+        setEmailValid(false);
+        setPasswordValid(false);
+    }
 
     return (
         <div className="form-container">
-            <form method="post">
+            <form method="post" onSubmit={login}>
                 <h1>Login</h1>
                 <div className="input">
                     <label>Inserisci l'email</label>
-                    <input type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" name="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="input">
                     <label>Inserisci la password</label>
-                    <input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className="button">
                     <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid)} />
-                    <input type="reset" value="Cancella" className="reset" />
+                    <input type="reset" value="Cancella" className="reset" onClick={resetInput} />
                 </div>
             </form>
         </div>
