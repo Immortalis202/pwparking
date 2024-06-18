@@ -6,6 +6,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [emailValid, setEmailValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
+    const [user, setUser] = useState("");
 
     const login = (event) => {
         event.preventDefault();
@@ -37,22 +38,28 @@ const SignIn = () => {
     }
 
     return (
-        <div className="form-container">
-            <form method="post" onSubmit={login}>
-                <h1>Login</h1>
-                <div className="input">
-                    <label>Inserisci l'email</label>
-                    <input type="email" name="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <div>
+            {user ? (
+                <div></div>
+            ) : (
+                <div className="form-container">
+                    <form method="post" onSubmit={login}>
+                        <h1>Login</h1>
+                        <div className="input">
+                            <label>Inserisci l'email</label>
+                            <input type="email" name="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+                        </div>
+                        <div className="input">
+                            <label>Inserisci la password</label>
+                            <input type="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+                        <div className="button">
+                            <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid)} />
+                            <input type="reset" value="Cancella" className="reset" onClick={resetInput} />
+                        </div>
+                    </form>
                 </div>
-                <div className="input">
-                    <label>Inserisci la password</label>
-                    <input type="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <div className="button">
-                    <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid)} />
-                    <input type="reset" value="Cancella" className="reset" onClick={resetInput} />
-                </div>
-            </form>
+            )}
         </div>
     );
 }
