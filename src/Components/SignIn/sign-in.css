@@ -7,6 +7,7 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
+    margin-top: 100px;
 }
 
 .form-container form {
@@ -27,6 +28,10 @@ body {
 .form-container form div {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.form-container form div label {
+    font-weight: bold;
 }
 
 .form-container form div.input {
@@ -70,4 +75,5 @@ body {
     color: white;
     width: 100px;
     height: 50px;
+    cursor: pointer;
 }
