@@ -75,8 +75,8 @@ body {
 }
 
 .form-container form div.button input.submit:disabled {
-    background-color: rgb(25, 114, 187);
-    border: solid 2px rgb(25, 114, 187);
+    background-color: rgb(19, 79, 129);
+    border: solid 2px rgb(19, 79, 129);
     color: rgba(255, 255, 255, 0.451);
     cursor: auto;
 }
