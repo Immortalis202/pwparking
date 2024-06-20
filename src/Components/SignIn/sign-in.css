@@ -19,6 +19,7 @@ body {
     max-width: 300px;
     border: solid 5px white;
     border-radius: 20px;
+    min-width: 250px;
 }
 
 .form-container form h1 {
@@ -52,6 +53,7 @@ body {
     color: rgb(139, 139, 139);
     font-size: 100%;
     margin-top: 5px;
+    padding: 0px 5px;
 }
 
 .form-container form div.button {
