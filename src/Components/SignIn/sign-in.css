@@ -6,7 +6,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: whitesmoke;
     margin-top: 100px;
 }
 
@@ -17,7 +17,7 @@ body {
     flex-direction: column;
     width: 35%;
     max-width: 300px;
-    border: solid 5px white;
+    border: solid 5px #ff0099;
     border-radius: 20px;
     min-width: 250px;
 }
@@ -54,6 +54,9 @@ body {
     font-size: 100%;
     margin-top: 5px;
     padding: 0px 5px;
+}
+.form-container form div.input input:hover {
+    border-color: #ff0099;
 }
 
 .form-container form div.button {
