@@ -56,7 +56,7 @@ body {
     padding: 0px 5px;
 }
 .form-container form div.input input:hover {
-    border-color: #ff0099;
+    border-color: lightgreen;
 }
 
 .form-container form div.button {

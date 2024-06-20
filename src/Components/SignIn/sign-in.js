@@ -51,11 +51,11 @@ const SignIn = () => {
                     <form method="post" onSubmit={login}>
                         <h1>Sign Up</h1>
                         <div className="input">
-                            <label>Inserisci l'email</label>
+                            <label>Inserisci il nome</label>
                             <input type="text" name="nome" placeholder="nome" onChange={(e) => setNome(e.target.value)} />
                         </div>
                         <div className="input">
-                            <label>Inserisci l'email</label>
+                            <label>Inserisci il cognome</label>
                             <input type="text" name="cognome" placeholder="cognome" onChange={(e) => setCognome(e.target.value)} />
                         </div>
                         <div className="input">
