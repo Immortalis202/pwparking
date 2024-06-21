@@ -17,6 +17,7 @@ const Root = () => {
               <li>
                 <Link to="/statistiche">Statistiche</Link>
               </li>
+              <li>{user}</li>
             </ul>
           </nav>
           <Outlet />

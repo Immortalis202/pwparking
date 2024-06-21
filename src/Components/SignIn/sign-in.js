@@ -23,7 +23,22 @@ const SignIn = ({ setUser }) => {
 
     const login = async (event) => {
         event.preventDefault();
-        setUser(email);
+    
+        const { user, session, error } = await supabase.auth.signIn({ email, password });
+    
+        if (error) {
+            console.error('Errore durante il login:', error.message);
+            alert('Errore durante il login: ' + error.message);
+            return;
+        }
+    
+        if (user) {
+            console.log('Login avvenuto con successo:', user);
+            setUser(user);
+        } else {
+            console.error('Errore imprevisto durante il login.');
+            alert('Errore imprevisto durante il login.');
+        }
     };
 
     const registrazione = async (event) => {
@@ -157,7 +172,7 @@ const SignIn = ({ setUser }) => {
                             <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid)} />
                             <input type="reset" value="Cancella" className="reset" onClick={resetInput} />
                         </div>
-                        <p>Sei già loggato? <a onClick={changeForm}>Registrati</a></p>
+                        <p>Non sei registrato? <a onClick={changeForm}>Registrati</a></p>
                     </form>
                 </div>
             ) : (
