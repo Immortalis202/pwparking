@@ -38,3 +38,11 @@
 .form-container form p a:hover {
     cursor: pointer;
 }
+
+.user {
+    color: rgb(0, 217, 255);
+}
+
+.user:hover {
+    color: rgb(4, 162, 190);
+}
