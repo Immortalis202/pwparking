@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import './sign-in.css';
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye'
 
 const SignIn = () => {
     const [nome, setNome] = useState('');
@@ -14,6 +17,9 @@ const SignIn = () => {
     const [confermaPasswordValid, setConfermaPasswordValid] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [user, setUser] = useState("");
+
+    const [type, setType] = useState('password');
+    const [icon, setIcon] = useState(eyeOff);
 
     const login = (event) => {
         const form = event.target;
@@ -70,6 +76,16 @@ const SignIn = () => {
         setConfermaPasswordValid(password === confermaPassword);
     }
 
+    const handleToggle = () => {
+        if (type==='password'){
+           setIcon(eye);
+           setType('text')
+        } else {
+           setIcon(eyeOff)
+           setType('password')
+        }
+     }
+
     const resetInput = () => {
         setNomeValid(false);
         setCognomeValid(false);
@@ -101,14 +117,19 @@ const SignIn = () => {
                         </div>
                         <div className="input">
                             <label>Inserisci la password</label>
-                            <input name="password" placeholder="password"  onChange={(e) => setPassword(e.target.value)} 
-                            
-                            id="pass"
-                            type={
-                                showPassword ? "text" : "password"
-                            }
+                            <input
+                                type={type}
+                                name="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="current-password"
                             
                             required/>
+                        
+                            <span class="flex justify-around items-center" onClick={handleToggle}>
+                                <Icon class="absolute mr-10" icon={icon} size={25}/>
+                            </span>
                         </div>
                         <div>
                         <label for="check">Show Password</label>
