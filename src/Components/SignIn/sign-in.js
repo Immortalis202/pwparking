@@ -4,6 +4,7 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import supabase from './../supabase';
+import bcrypt from 'bcryptjs';
 
 const SignIn = ({ setUser }) => {
     const [nome, setNome] = useState('');
@@ -23,21 +24,42 @@ const SignIn = ({ setUser }) => {
 
     const login = async (event) => {
         event.preventDefault();
-    
-        const { user, session, error } = await supabase.auth.signIn({ email, password });
-    
-        if (error) {
-            console.error('Errore durante il login:', error.message);
-            alert('Errore durante il login: ' + error.message);
-            return;
-        }
-    
-        if (user) {
-            console.log('Login avvenuto con successo:', user);
-            setUser(user);
-        } else {
-            console.error('Errore imprevisto durante il login.');
-            alert('Errore imprevisto durante il login.');
+        try {
+            const { data, error } = await supabase
+                .from('utenti')
+                .select('email, password')
+                .eq('email', email)
+                .single(); // Single ensures we get a single result or error if not found
+
+            if (error) {
+                console.error('Error fetching user data:', error);
+                alert('Errore nel recuperare i dati utente.');
+                return;
+            }
+
+            if (!data) {
+                alert('Email non trovata.');
+                return;
+            }
+
+            const userEmail = data.email;
+            const userPasswordHash = data.password;
+
+            // Log per diagnosticare il problema
+            console.log('Password inserita:', password);
+            console.log('Hash memorizzato:', userPasswordHash);
+
+            const passwordMatch = await bcrypt.compare(password, userPasswordHash);
+
+            if (passwordMatch) {
+                console.log('Login effettuato con successo');
+                setUser(userEmail);
+            } else {
+                alert('Password errata.');
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            alert('Errore inaspettato durante il login.');
         }
     };
 
@@ -62,11 +84,14 @@ const SignIn = ({ setUser }) => {
                 return;
             }
 
+            // Hash della password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             // Inserisci il nuovo utente
             const { data, error: insertError } = await supabase
                 .from('utenti')
                 .insert([
-                    { nome, cognome, data_di_nascita: dataNascita, email, password, id_tipologia: 1 },
+                    { nome, cognome, data_di_nascita: dataNascita, email, password: hashedPassword, id_tipologia: 1 },
                 ])
                 .select();
 
