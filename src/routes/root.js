@@ -18,11 +18,11 @@ const Root = () => {
                 <Link to="/statistiche">Statistiche</Link>
               </li>
               <li>
-                <Link className="user">{user}</Link>
+                <Link to="/profilo" className="user">{user}</Link>
               </li>
             </ul>
           </nav>
-          <Outlet context={{ userEmail: user }} />
+          <Outlet context={{ userEmail: user, setUser: setUser }} />
         </div>
       ) : (
         <div>

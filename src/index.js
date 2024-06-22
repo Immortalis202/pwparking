@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import SignIn from './Components/SignIn/sign-in';
 import Root from './routes/root';
 import Home from './routes/home';
+import Profilo from './routes/profilo';
 import Statistiche from './routes/statistiche';
 
 const router = createBrowserRouter([
@@ -20,6 +21,11 @@ const router = createBrowserRouter([
       {
         path: '/statistiche',
         element: <Statistiche />,
+      },
+
+      {
+        path: '/profilo',
+        element: <Profilo />,
       },
     ],
   },
