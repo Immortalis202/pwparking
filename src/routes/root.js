@@ -22,7 +22,7 @@ const Root = () => {
               </li>
             </ul>
           </nav>
-          <Outlet />
+          <Outlet context={{ userEmail: user }} />
         </div>
       ) : (
         <div>
