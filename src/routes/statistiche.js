@@ -77,7 +77,7 @@ const Statistiche = () => {
       <hgroup>
         <h2>Parcheggi effettuati</h2>
         {isLoading ? (
-          <p>Caricamento...</p>
+          <span aria-busy="true">Generating your old tickets</span>
         ) : (
           usersTickets.length > 0 ? (
             <table>

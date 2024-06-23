@@ -16,6 +16,8 @@ const SignIn = ({ setUser }) => {
     const [emailValid, setEmailValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
     const [dataNascita, setDataNascita] = useState('');
+    const [targa, setTarga] = useState('');
+    const [targaValid, setTargaValid] = useState(false);
 
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
@@ -88,7 +90,7 @@ const SignIn = ({ setUser }) => {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Inserisci il nuovo utente
-            const { data, error: insertError } = await supabase
+            const { data: newUser, error: insertError } = await supabase
                 .from('utenti')
                 .insert([
                     { nome, cognome, data_di_nascita: dataNascita, email, password: hashedPassword, id_tipologia: 1 },
@@ -97,10 +99,40 @@ const SignIn = ({ setUser }) => {
 
             if (insertError) {
                 console.error('Errore durante la registrazione:', insertError);
-            } else {
-                console.log('Registrazione avvenuta con successo:', data);
-                setUser(email);
+                return;
             }
+
+            const userId = newUser[0].id;
+
+            // Inserisci la targa nella tabella veicoli
+            const { data: newVehicle, error: vehicleInsertError } = await supabase
+                .from('veicoli')
+                .insert([
+                    { targa },
+                ])
+                .select();
+
+            if (vehicleInsertError) {
+                console.error('Errore durante l\'inserimento del veicolo:', vehicleInsertError);
+                return;
+            }
+
+            const vehicleId = newVehicle[0].id;
+
+            // Inserisci nella tabella veicoli_utenti
+            const { error: vehicleUserInsertError } = await supabase
+                .from('veicoli_utenti')
+                .insert([
+                    { id_veicolo: vehicleId, id_utente: userId },
+                ]);
+
+            if (vehicleUserInsertError) {
+                console.error('Errore durante l\'inserimento del veicolo utente:', vehicleUserInsertError);
+                return;
+            }
+
+            console.log('Registrazione avvenuta con successo:', newUser);
+            setUser(email);
         } catch (error) {
             console.error('Errore inaspettato:', error);
         }
@@ -117,6 +149,10 @@ const SignIn = ({ setUser }) => {
     useEffect(() => {
         validateCognome();
     }, [cognome]);
+
+    useEffect(() => {
+        validateTarga();
+    }, [targa]);
 
     useEffect(() => {
         validateEmail();
@@ -146,6 +182,11 @@ const SignIn = ({ setUser }) => {
         setPasswordValid(pattern.test(password));
     };
 
+    const validateTarga = () => {
+        const pattern = /^[A-Z]{2}\d{3}[A-Z]{2}$/;
+        setTargaValid(pattern.test(targa));
+    }
+
     const handleToggle = () => {
         if (type === 'password') {
             setIcon(eye);
@@ -162,10 +203,12 @@ const SignIn = ({ setUser }) => {
         setEmail('');
         setPassword('');
         setDataNascita('');
+        setTarga('');
         setNomeValid(false);
         setCognomeValid(false);
         setEmailValid(false);
         setPasswordValid(false);
+        setTargaValid(false);
     };
 
     return (
@@ -212,9 +255,13 @@ const SignIn = ({ setUser }) => {
                             <label>Inserisci il cognome</label>
                             <input type="text" name="cognome" placeholder="cognome" value={cognome} onChange={(e) => setCognome(e.target.value)} required />
                         </div>
-                        <div>
+                        <div className="input">
                             <label>Data di nascita</label>
                             <input type="date" name="date" aria-label="Date" onChange={(e) => setDataNascita(e.target.value)} required />
+                        </div>
+                        <div className="input">
+                            <label>Targa veicolo</label>
+                            <input type="text" name="targa" placeholder="targa" value={targa} onChange={(e) => setTarga(e.target.value)} required />
                         </div>
                         <div className="input">
                             <label>Inserisci l'email</label>
@@ -236,14 +283,13 @@ const SignIn = ({ setUser }) => {
                             </span>
                         </div>
                         <div className="button">
-                            <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid && nomeValid && cognomeValid)} />
+                            <input type="submit" value="Invia" className="submit" disabled={!(emailValid && passwordValid && nomeValid && cognomeValid && targaValid)} />
                             <input type="reset" value="Cancella" className="reset" onClick={resetInput} />
                         </div>
                         <p>Sei già registrato? <a onClick={changeForm}>Effettua il login</a></p>
                     </form>
                 </div>
-            )
-            }
+            )}
         </>
     );
 }
