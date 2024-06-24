@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import SignIn from './../Components/SignIn/sign-in';
+import './../App.css';
 
 const Root = () => {
   const [user, setUser] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <>

@@ -7,6 +7,17 @@ const Statistiche = () => {
   const [usersTickets, setUsersTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  //ticket modificato
+  const isPastTicket = (ticket) => {
+    const now = new Date();
+    const ticketEndDate = new Date(ticket.data_ora_fine);
+
+    if (ticket.data_ora_fine === null) {
+      return false; // Ticket is in progress
+    }
+    return true;
+  };
+
   const oldTickets = async () => {
     setIsLoading(true);
     if (!userEmail) {
@@ -89,11 +100,21 @@ const Statistiche = () => {
                 </tr>
               </thead>
               <tbody>
-                {usersTickets.map(ticket => (
+              {usersTickets.map(ticket => (
                   <tr key={ticket.id}>
-                    <td>{ticket.numero_del_parcheggio}</td>
-                    <td>{ticket.data_ora_inizio}</td>
-                    <td>{ticket.data_ora_fine}</td>
+                    {isPastTicket(ticket) ? (
+                      <>
+                        <td>{ticket.numero_del_parcheggio}</td>
+                        <td>{ticket.data_ora_inizio}</td>
+                        <td>{ticket.data_ora_fine}</td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{ticket.numero_del_parcheggio}</td>
+                        <td>{ticket.data_ora_inizio}</td>
+                        <td>In Corso</td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>
