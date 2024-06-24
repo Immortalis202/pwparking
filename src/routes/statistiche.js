@@ -46,7 +46,7 @@ const Statistiche = () => {
       .from('ticket')
       .select('id, data_ora_inizio, data_ora_fine, id_parcheggio')
       .eq('id_utente', userId)
-      .order('id', { ascending: false });
+      .order('data_ora_inizio', { ascending: false });
 
     if (ticketsError) {
       console.error('Errore nel recuperare i ticket: ' + ticketsError.message);
