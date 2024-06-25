@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from './../Components/supabase';
 import { useOutletContext } from 'react-router-dom';
 import './../App.css';
+import { Outlet, Link } from 'react-router-dom';
 
 const Profilo = () => {
     const { userEmail, setUser } = useOutletContext();
@@ -80,7 +81,7 @@ const Profilo = () => {
                         <hr />
                     </div>
                 )}
-                <button className='logoutButton' onClick={logout}>Logout</button>
+                <Link to="../"><button className='logoutButton' onClick={logout}>Logout</button></Link>
             </hgroup>
         </div>
     );
