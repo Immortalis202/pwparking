@@ -116,7 +116,7 @@ export default function MapG() {
 
 	return (
 		<APIProvider
-			apiKey={"AIzaSyCBfWQYSK7gFITUc1I9J2tGeSdRNRpVx7E"}
+			apiKey={""}
 			onLoad={() => console.log("Maps API has loaded.")}
 		>
 			<Map
