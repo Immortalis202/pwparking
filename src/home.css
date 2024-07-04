@@ -1,0 +1,13 @@
+.home{
+    display: flex;
+    margin-top: 20px;
+    gap: 30px;
+}
+
+h1{
+    display: flex;
+    align-content: center;
+    margin-top: 10px;
+    color: #e96d20;
+    font-size: 65px;
+}

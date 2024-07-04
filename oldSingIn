@@ -3,7 +3,7 @@ import './sign-in.css';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
-import supabase from './../supabase';
+import  supabase from "./../supabase";
 import bcrypt from 'bcryptjs';
 
 const SignIn = ({ setUser }) => {

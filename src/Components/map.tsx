@@ -9,15 +9,15 @@ import {
 	InfoWindow,
 } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import type { Marker } from "@googlemaps/markerclusterer";	
-import { supabase } from "./supabaseClient";
-import useDeviceInfo from "./deviceInfo";
+import type { Marker } from "@googlemaps/markerclusterer";
+import { supabase } from "./supabase.ts";
+import useDeviceInfo from "./deviceInfo.tsx";
+import "./map.css";
+import PinSVG from "./PinSVG.jsx";
 
-const containerStyle = {
-	width: "50rem",
-	height: "600px",
-	margin: "60px",
-};
+const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string;
+
+
 
 const zoneCoords = [
 	[
@@ -116,22 +116,52 @@ export default function MapG() {
 
 	return (
 		<APIProvider
-			apiKey={""}
+			apiKey={apiKey}
 			onLoad={() => console.log("Maps API has loaded.")}
 		>
-			<Map
-				mapId={"209c91d70750a3c"}
-				style={containerStyle}
-				defaultZoom={13}
-				defaultCenter={{ lat: 45.47169, lng: 9.18254 }}
-			>
-				<PoiMarkers pois={locations} />
-				<MapComponent num={0} color={"#FF0000"} />
-				<MapComponent num={1} color={"#00FF00"} />
-				<MapComponent num={2} color={"#FF00FF"} />
-				<MapComponent num={3} color={"#0000FF"} />
-				<MapComponent num={4} color={"#FFFF00"} />
-			</Map>
+			<div className={"contenitore"}>
+				<Map
+					mapId={"209c91d70750a3c"}
+					className={"containerStyle"}
+					defaultZoom={13}
+					defaultCenter={{ lat: 45.47169, lng: 9.18254 }}
+				>
+					<PoiMarkers pois={locations} />
+					<MapComponent num={0} color={"#FF000040"} />
+					<MapComponent num={1} color={"#00FF0040"} />
+					<MapComponent num={2} color={"#FF00FF40"} />
+					<MapComponent num={3} color={"#0000FF40"} />
+					<MapComponent num={4} color={"#FFFF0040"} />
+				</Map>
+				<div style={{ marginLeft: "60px", marginTop: "60px" }}>
+					<ul>
+						<li>
+							<PinSVG
+								colorCircle={"#000000"}
+								colorOutside={"#FF0000"}
+							/>{" "}
+							Indica che il parcheggio e' disponibile ma e'
+							sprovvisto di una colonnina per la ricarica
+							elettrica
+						</li>
+						<li>
+							<PinSVG
+								colorCircle={"#00FF00"}
+								colorOutside={"#FF0000"}
+							/>{" "}
+							Indica che il parcheggio e' disponibile ed e'
+							provvisto di una colonnina per la ricarica elettrica
+						</li>
+						<li>
+							<PinSVG
+								colorCircle={"#000000"}
+								colorOutside={"#3c3c3c"}
+							/>{" "}
+							Indica che il parcheggio non e' disponibile attualmente
+						</li>
+					</ul>
+				</div>
+			</div>
 		</APIProvider>
 	);
 }
@@ -318,14 +348,15 @@ const PoiMarkers = (props: { pois: Poi[] }) => {
 				</AdvancedMarker>
 			))}
 			{selectedPoi && (
-				<InfoWindow
+				<InfoWindow 
+				
 					position={selectedPoi.location}
 					onCloseClick={() => {
 						setSelectedPoi(null);
 						clearExistingRoute();
 					}}
 				>
-					<div>
+					<div >
 						<h3>Parking Spot {selectedPoi.key}</h3>
 						<p>
 							{selectedPoi.isOccupied ? "Occupied" : "Available"}
@@ -371,5 +402,5 @@ const MapComponent = ({ num, color }: { num: number; color: string }) => {
 			polygon.setMap(map);
 		}
 	}, [map]);
-	return <div ref={mapRef} style={containerStyle}></div>;
+	return <div ref={mapRef} ></div>;
 };

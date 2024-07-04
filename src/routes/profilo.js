@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import supabase from './../Components/supabase';
-import { useOutletContext } from 'react-router-dom';
+import { supabase } from './../Components/supabase.ts';
 import './../App.css';
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext.tsx'; 
 
 const Profilo = () => {
-    const { userEmail, setUser } = useOutletContext();
+    const { user, signOut } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [userInformation, setUserInformation] = useState({});
     const [vehicles, setVehicles] = useState([]);
+    const [cards, setCards] = useState([]);
 
     useEffect(() => {
         const fetchUserInformation = async () => {
             setIsLoading(true);
             try {
                 // Recupera informazioni dell'utente
-                const { data: user, error: userError } = await supabase
+                const { data: userData, error: userError } = await supabase
                     .from('utenti')
                     .select('*')
-                    .eq('email', userEmail)
+                    .eq('email', user?.email)
                     .single();
 
                 if (userError) {
@@ -27,13 +28,13 @@ const Profilo = () => {
                     return;
                 }
 
-                setUserInformation(user);
+                setUserInformation(userData);
 
                 // Recupera veicoli associati all'utente
                 const { data: vehiclesData, error: vehiclesError } = await supabase
                     .from('veicoli_utenti')
                     .select('veicoli (targa)')
-                    .eq('id_utente', user.id);
+                    .eq('id_utente', userData.id);
 
                 if (vehiclesError) {
                     console.error('Errore nel recuperare i veicoli:', vehiclesError.message);
@@ -43,6 +44,20 @@ const Profilo = () => {
 
                 setVehicles(vehiclesData.map(vehicle => vehicle.veicoli));
 
+                const { data: cardsData, error: cardsError } = await supabase
+                .from('carte_utente')
+                .select('carte (id)')
+                .eq('id_utente', userData.id);
+
+            if (cardsError) {
+                console.error('Errore nel recuperare le carte:', cardsError.message);
+                setIsLoading(false);
+                return;
+            }
+
+            setCards(cardsData.map(card => card.carte));
+
+
                 setIsLoading(false);
             } catch (error) {
                 console.error('Errore nel fetch delle informazioni utente:', error.message);
@@ -50,14 +65,22 @@ const Profilo = () => {
             }
         };
 
-        if (userEmail) {
+        if (user) {
             fetchUserInformation();
         }
-    }, [userEmail]);
+    }, [user]);
 
-    const logout = () => {
-        setUser('');
+    const handleLogout = async () => {
+        try {
+            await signOut();
+        } catch (error) {
+            console.error('Errore durante il logout:', error);
+        }
     };
+
+    if (!user) {
+        return <div>Please log in to view your profile.</div>;
+    }
 
     return (
         <div>
@@ -74,14 +97,22 @@ const Profilo = () => {
                         <p>Email: {userInformation.email}</p>
                         <p>Veicoli:</p>
                         <ul>
-                            {vehicles.map(vehicle => (
-                                <li key={vehicle.id}>{vehicle.targa}</li>
+                            {vehicles.map((vehicle, index) => (
+                                <li key={index}>{vehicle.targa}</li>
+                            ))}
+                        </ul>
+                        <p>Carte:</p>
+
+                        //TODO CONTROLLARE 
+                        <ul>
+                            {cards.map((card, index) => (
+                                <li key={index}>{card.numero}</li>
                             ))}
                         </ul>
                         <hr />
                     </div>
                 )}
-                <Link to="../"><button className='logoutButton' onClick={logout}>Logout</button></Link>
+                <Link to="../"><button className='logoutButton' onClick={handleLogout}>Logout</button></Link>
             </hgroup>
         </div>
     );
